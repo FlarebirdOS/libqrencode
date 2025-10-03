@@ -1,22 +1,26 @@
 pkgname=libqrencode
 pkgver=4.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc="C library for encoding data in a QR Code symbol."
 arch=('x86_64')
-url="https://fukuchi.org/works/qrencode"
+url="https://fukuchi.org/works/qrencode/"
 license=('LGPL-2.1-or-later')
 depends=('libpng')
-source=(https://github.com/fukuchi/libqrencode/archive/v${pkgver}/${pkgname}-${pkgver}.tar.gz)
-sha256sums=(5385bc1b8c2f20f3b91d258bf8ccc8cf62023935df2d2676b5b67049f31a049c)
+makedepends=(
+    'git'
+    'sdl2'
+)
+source=(git+ssh://git@github.com/fukuchi/libqrencode#tag=v${pkgver})
+sha256sums=(0151f34aa6996aefb0a3d011ce050bf32c70c5644055d8c82dcaa8044332ad35)
 
 prepare() {
-    cd ${pkgname}-${pkgver}
+    cd ${pkgname}
 
-    sh autogen.sh
+    autoreconf -fi
 }
 
 build() {
-    cd ${pkgname}-${pkgver}
+    cd ${pkgname}
 
     local configure_args=(
         ${configure_options}
@@ -28,7 +32,7 @@ build() {
 }
 
 package() {
-    cd ${pkgname}-${pkgver}
+    cd ${pkgname}
 
     make DESTDIR=${pkgdir} install
 }
